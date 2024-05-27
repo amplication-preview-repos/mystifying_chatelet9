@@ -1,0 +1,90 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Stock {
+  avgVolume     Int?
+  createdAt     DateTime  @default(now())
+  dividendYield Float?
+  exchange      Exchange? @relation(fields: [exchangeId], references: [id])
+  exchangeId    String?
+  id            String    @id @default(cuid())
+  industry      String?
+  marketCap     Float?
+  name          String?
+  peRatio       Float?
+  price         Float?
+  sector        String?
+  ticker        String?
+  trades        Trade[]
+  updatedAt     DateTime  @updatedAt
+  website       String?
+}
+
+model Exchange {
+  ceo         String?
+  closingTime DateTime?
+  country     String?
+  createdAt   DateTime  @default(now())
+  currency    String?
+  established DateTime?
+  id          String    @id @default(cuid())
+  location    String?
+  name        String?
+  openingTime DateTime?
+  stocks      Stock[]
+  timezone    String?
+  updatedAt   DateTime  @updatedAt
+}
+
+model Trade {
+  broker    String?
+  createdAt DateTime            @default(now())
+  date      DateTime?
+  fees      Float?
+  id        String              @id @default(cuid())
+  price     Float?
+  quantity  Int?
+  status    EnumTradeStatus?
+  stock     Stock?              @relation(fields: [stockId], references: [id])
+  stockId   String?
+  timestamp DateTime?
+  typeField EnumTradeTypeField?
+  updatedAt DateTime            @updatedAt
+  user      User?               @relation(fields: [userId], references: [id])
+  userId    String?
+}
+
+model User {
+  accountBalance Float?
+  address        String?
+  createdAt      DateTime      @default(now())
+  dateOfBirth    DateTime?
+  email          String?
+  firstName      String?
+  id             String        @id @default(cuid())
+  lastName       String?
+  password       String?
+  phoneNumber    String?
+  role           EnumUserRole?
+  trades         Trade[]
+  updatedAt      DateTime      @updatedAt
+  username       String?
+}
+
+enum EnumTradeStatus {
+  Option1
+}
+
+enum EnumTradeTypeField {
+  Option1
+}
+
+enum EnumUserRole {
+  Option1
+}
